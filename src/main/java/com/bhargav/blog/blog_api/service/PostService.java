@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -34,5 +36,26 @@ public class PostService {
 
     public Page<Post> getAllPosts(Pageable pageable) {
         return postRepo.findAll(pageable);
+    }
+
+    public List<Post> searchPosts(String tag) {
+       return postRepo.findAll().stream()
+                .filter(post -> post.getTags() != null && post.getTags().contains(tag))
+                .toList();
+
+    }
+
+    public void deleteAllPosts() {
+        postRepo.deleteAll();
+    }
+
+    public boolean updatePost(int id, Post post) {
+        if(postRepo.existsById(id)) {
+            post.setId(id);
+            postRepo.save(post);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -19,9 +21,9 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createPost(@RequestBody Post post) {
+    public ResponseEntity<String> createPost(@RequestBody Post post) {
         postService.createPost(post);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("Post created succesfully!!!", HttpStatus.CREATED);
     }
 
     @PutMapping("/delete/{id}")
@@ -29,8 +31,15 @@ public class PostController {
         return postService.deletePost(id);
     }
 
+    @PutMapping("/deleteAll")
+    public ResponseEntity<String> deleteAllPosts() {
+        postService.deleteAllPosts();
+        return new ResponseEntity<>("All posts deleted succesfully!", HttpStatus.OK);
+    }
+
+
     @GetMapping("/get")
-    public ResponseEntity<?> getAllPosts(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Object> getAllPosts(@RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "5") int limit) {
 
         Pageable pageable = PageRequest.of(page, limit);
@@ -47,6 +56,33 @@ public class PostController {
         }
 
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Object> searchPosts(@RequestParam String tag) {
+        List<Post> posts =  postService.searchPosts(tag);
+
+        if (posts.isEmpty()) {
+            return new ResponseEntity<>(
+                    "No posts found with tag: " + tag,
+                    HttpStatus.NOT_FOUND
+            );
+        } else {
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        }
+
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updatePost(@PathVariable int id, @RequestBody Post post) {
+        boolean updated = postService.updatePost(id, post);
+
+        if (updated) {
+            return new ResponseEntity<>("Post updated successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Post with id " + id + " does not exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }
 
