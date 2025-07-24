@@ -73,7 +73,7 @@ public class PostController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updatePost(@PathVariable int id, @RequestBody Post post) {
+    public ResponseEntity<String> updatePost(@PathVariable int id, @RequestBody Post post) {
         boolean updated = postService.updatePost(id, post);
 
         if (updated) {
