@@ -2,6 +2,7 @@ package com.bhargav.blog.blog_api.controller;
 
 import com.bhargav.blog.blog_api.model.Comment;
 import com.bhargav.blog.blog_api.service.CommentService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
