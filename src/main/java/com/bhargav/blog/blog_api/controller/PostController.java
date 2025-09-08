@@ -61,6 +61,10 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
+        if(!jwtUtil.isUserAdmin(request)){
+            return new ResponseEntity<>("Only admin can delete all posts!", HttpStatus.UNAUTHORIZED);
+        }
+
         postService.deleteAllPosts();
         return new ResponseEntity<>("All posts deleted succesfully!", HttpStatus.OK);
     }
@@ -118,13 +122,12 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        boolean updated = postService.updatePost(id, post);
-
-        if (updated) {
-            return new ResponseEntity<>("Post updated successfully!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Post with id " + id + " does not exist.", HttpStatus.NOT_FOUND);
+        if (jwtUtil.isSameUser(id, request)) {
+            return postService.updatePost(id, post);
         }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("You are not authorized to update this post.");
     }
 
 }

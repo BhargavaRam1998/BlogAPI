@@ -49,13 +49,13 @@ public class PostService {
         postRepo.deleteAll();
     }
 
-    public boolean updatePost(int id, Post post) {
+    public ResponseEntity<String> updatePost(int id, Post post) {
         if(postRepo.existsById(id)) {
             post.setId(id);
             postRepo.save(post);
-            return true;
+            return new ResponseEntity<>("Post updated succesfully!", HttpStatus.OK);
         } else {
-            return false;
+            return new ResponseEntity<>("Post with id " + id + " does not exist.", HttpStatus.NOT_FOUND);
         }
     }
 }
