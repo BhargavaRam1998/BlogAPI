@@ -29,6 +29,8 @@ public class Post {
 
     private String author;
 
+    private String authorEmail;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

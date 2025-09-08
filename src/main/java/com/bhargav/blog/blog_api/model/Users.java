@@ -1,9 +1,6 @@
 package com.bhargav.blog.blog_api.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -19,4 +16,7 @@ public class Users {
     private String email;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role; // e.g., "USER", "ADMIN"
 }

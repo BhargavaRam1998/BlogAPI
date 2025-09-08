@@ -1,9 +1,12 @@
 package com.bhargav.blog.blog_api.service;
 
 import com.bhargav.blog.blog_api.config.JwtUtil;
+import com.bhargav.blog.blog_api.model.Post;
 import com.bhargav.blog.blog_api.model.Users;
 import com.bhargav.blog.blog_api.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,4 +41,11 @@ public class UserService {
         response.put("token", token);
         return response;
     }
+
+    public Page<Users> getAllUsers(Pageable pageable) {
+        return userRepo.findAll(pageable);
+
+    }
+
+
 }

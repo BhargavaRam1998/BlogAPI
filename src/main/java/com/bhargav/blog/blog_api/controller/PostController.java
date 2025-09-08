@@ -37,11 +37,21 @@ public class PostController {
     @PutMapping("/delete/{id}")
     public ResponseEntity<String> deletePost(@PathVariable int id, HttpServletRequest request) {
 
-        if(!jwtUtil.isAuthorized(request)){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if (!jwtUtil.isAuthorized(request)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("You are not authorized to delete this post.");
         }
 
-        return postService.deletePost(id);
+        if (jwtUtil.isUserAdmin(request)) {
+            return postService.deletePost(id);
+        }
+
+        if (jwtUtil.isSameUser(id, request)) {
+            return postService.deletePost(id);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("You are not authorized to delete this post.");
     }
 
     @PutMapping("/deleteAll")
