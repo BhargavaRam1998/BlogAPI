@@ -36,7 +36,12 @@ public class CommentController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return commentService.updateComment(id, comment);
+        if (jwtUtil.isSameUser(id, request)) {
+            return commentService.updateComment(id, comment);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("You are not authorized to update this comment.");
 
     }
 
@@ -47,7 +52,16 @@ public class CommentController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return commentService.deleteComment(id);
+        if (jwtUtil.isUserAdmin(request)) {
+            return commentService.deleteComment(id);
+        }
+
+        if (jwtUtil.isSameUser(id, request)) {
+            return commentService.deleteComment(id);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("You are not authorized to delete this comment.");
 
     }
 }
